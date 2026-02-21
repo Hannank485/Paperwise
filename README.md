@@ -62,7 +62,7 @@
 
 ## Tech Stack
 
-**Frontend** React, Typescript
+**Frontend** React, Typescript  
 **Backend:** Node.js, Express, TypeScript  
 **Database:** PostgreSQL, Prisma ORM, pgvector  
 **AI:** OpenAI API  
@@ -73,7 +73,7 @@
 
 ## Why This Exists
 
-Most AI paper tools treat all PDFs equally. PaperWise uses domain-specific credibility scoring informed by biology research conventions to filter out low-quality uploads before they consume API resources.
+Most AI paper tools treat all PDFs equally.PaperWise reduces hallucinations and API costs by automatically filtering low-quality research papers and prioritizing structured scientific sources before embedding.
 
 ---
 
