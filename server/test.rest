@@ -1,0 +1,32 @@
+### TESTING API
+GET http://localhost:3000/
+
+### Testing Register
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+    "username": "testUser",
+    "password": "testPassword"
+}
+
+### Testing Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "testUser",
+    "password": "testPassword"
+}
+
+### Testing upload
+POST http://localhost:3000/api/session/file/upload
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcxNjcwNDk0LCJleHAiOjE3NzE2NzQwOTR9.YrJ9z8QZ4mhit8brRQ7fOdRM8Tfznrk7mkUNSxzH46Y
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="pdf"; filename="test.pdf"
+Content-Type: application/pdf
+
+< ./src/research_paper.pdf
+--boundary--
