@@ -62,7 +62,7 @@
 
 ## Tech Stack
 
-**Frontend** React, Typescript
+**Frontend** React, Typescript  
 **Backend:** Node.js, Express, TypeScript  
 **Database:** PostgreSQL, Prisma ORM, pgvector  
 **AI:** OpenAI API  
