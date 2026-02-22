@@ -34,14 +34,19 @@ const authController = {
       return res.status(400).json({ message: "Credentials not sent" });
     }
     const usernameLower = username.toLowerCase();
-    const accessToken = await authService.login(usernameLower, password);
-    res.cookie("accessToken", accessToken, {
-      secure: true,
-      sameSite: "strict",
-      httpOnly: true,
-      maxAge: 60 * 60 * 1000,
-    });
-    return res.status(200).json({ message: accessToken });
+    try {
+      const accessToken = await authService.login(usernameLower, password);
+      res.cookie("accessToken", accessToken, {
+        secure: true,
+        sameSite: "strict",
+        httpOnly: true,
+        maxAge: 60 * 60 * 1000,
+      });
+      return res.status(200).json({ message: accessToken });
+    } catch (err) {
+      if (err instanceof Error)
+        return res.status(400).json({ message: err.message });
+    }
   },
 };
 

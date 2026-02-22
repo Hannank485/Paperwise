@@ -1,12 +1,22 @@
 import { PDFParse } from "pdf-parse";
 import OpenAI from "openai";
 const openai = new OpenAI();
+import sessionModel from "../Model/sessionModel";
+import fileModel from "../Model/fileModel";
+import prisma from "../prismaClient";
+
 type embeddedChunkType = {
   chunk: string;
-  embedding: number[];
+  embedding: string;
 };
+
 const fileService = {
-  async upload(file: Express.Multer.File) {
+  async upload(file: Express.Multer.File, sessionId: number, userId: number) {
+    // verify ownership
+    const session = await sessionModel.getSingleSession(sessionId);
+    if (session?.userId !== userId) {
+      throw new Error("UNAUTHORISED");
+    }
     // Parse PDF
     async function parsePDF(data: Express.Multer.File["buffer"]) {
       const pdf = new PDFParse({ data: data });
@@ -17,7 +27,6 @@ const fileService = {
     }
     const content = await parsePDF(file.buffer);
     const words = content.split(/\s+/);
-
     // CHECK CREDIBILITY OF THE PDF
     const toneKeywords = [
       "kinda",
@@ -69,45 +78,66 @@ const fileService = {
       words.length,
       content,
     );
-
-    // CHUNKING AND EMBEDDING CREDIBLE STUFF AND
-    if (credible) {
-      async function createChunk(word: string[], chunkLength: number = 500) {
-        let chunks: string[] = [];
-        for (let i = 0; i <= word.length; i += chunkLength) {
-          const chunk = word.slice(i, i + chunkLength).join(" ");
-          chunks.push(chunk);
-        }
-        return chunks;
+    // CHUNKING
+    async function createChunk(word: string[], chunkLength: number = 500) {
+      let chunks: string[] = [];
+      for (let i = 0; i <= word.length; i += chunkLength) {
+        const chunk = word.slice(i, i + chunkLength).join(" ");
+        chunks.push(chunk);
       }
-      const chunks = await createChunk(words);
-      console.log(chunks.length);
+      return chunks;
+    }
+    //   EMBEDDING
+    async function embedChunks(chunk: string) {
+      // TEST EMBEDDING
+      const embedding = new Array(1536).fill(0);
 
-      //   EMBEDDING
-      async function embedChunks(chunk: string) {
-        const embedding = await openai.embeddings.create({
-          model: "text-embedding-3-small",
-          input: chunk,
+      // OPEN AI EMBEDDING
+      // const embedding = await openai.embeddings.create({
+      //   model: "text-embedding-3-small",
+      //   input: chunk,
+      // });
+      return embedding;
+    }
+    async function getAllEmbedded(chunks: string[]) {
+      const embeddings: embeddedChunkType[] = [];
+      for (const chunk of chunks) {
+        const embedding = await embedChunks(chunk);
+        // const vectorString = `[${embedding.data[0].embedding.join(",")}]`;
+        const vectorString = `[${embedding.join(",")}]`;
+        embeddings.push({
+          chunk: chunk,
+          embedding: vectorString,
         });
-        return embedding;
       }
-      async function getAllEmbedded(chunks: string[]) {
-        const embeddings: embeddedChunkType[] = [];
-        for (const chunk of chunks) {
-          const embedding = await embedChunks(chunk);
-          embeddings.push({
-            chunk: chunk,
-            embedding: embedding.data[0].embedding,
-          });
-        }
-      }
+      return embeddings;
     }
-    // IF NOT CREDIBLE
-    else {
-    }
+    const chunks = await createChunk(words);
+    console.log(chunks.length);
 
-    console.log(words.length);
-    console.log(credible);
+    const embeddings = await getAllEmbedded(chunks);
+    await prisma.$transaction(
+      async (tx) => {
+        // STORING DOCUMENT
+        const document = await fileModel.createDocument(
+          tx,
+          content,
+          session.id,
+          credible,
+        );
+        if (credible) {
+          for (const item of embeddings) {
+            await fileModel.createEmbedding(
+              tx,
+              item.chunk,
+              item.embedding,
+              document.id,
+            );
+          }
+        }
+      },
+      { timeout: 30000 },
+    );
   },
 };
 

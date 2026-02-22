@@ -1,3 +1,31 @@
-const fileModel = {};
+import prisma from "../prismaClient";
+import { Prisma } from "@prisma/client";
+type Transaction = Prisma.TransactionClient;
+const fileModel = {
+  async createDocument(
+    tx: Transaction,
+    text: string,
+    sessionId: number,
+    valid: boolean,
+  ) {
+    const document = await tx.document.create({
+      data: {
+        sessionId: sessionId,
+        content: text,
+        isValid: valid,
+      },
+    });
+    return document;
+  },
+
+  async createEmbedding(
+    tx: Transaction,
+    text: string,
+    embedding: string,
+    documentId: number,
+  ) {
+    await tx.$queryRaw`INSERT INTO "Chunks" (text,embedding,"documentId") VALUES (${text},${embedding}::vector, ${documentId})`;
+  },
+};
 
 export default fileModel;

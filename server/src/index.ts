@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import authRouter from "./Route/authRoutes";
-import fileRotuer from "./Route/fileRoute";
+import fileRouter from "./Route/fileRoute";
 import sessionRoute from "./Route/sessionRoute";
 import authMiddleware from "./Middleware/authMiddleware";
 import cookieParser from "cookie-parser";
@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter);
 app.use("/api/session", authMiddleware, sessionRoute);
-app.use("/api/session/file", authMiddleware, fileRotuer);
+app.use("/api/session/:id/file", authMiddleware, fileRouter);
 
 app.get("/", () => console.log("Hello"));
 

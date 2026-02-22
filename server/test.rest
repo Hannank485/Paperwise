@@ -19,9 +19,14 @@ Content-Type: application/json
     "password": "testPassword"
 }
 
+
+### TESTING SESSION CREATION
+POST  http://localhost:3000/api/session/create
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcxNzA0MjUzLCJleHAiOjE3NzE3MDc4NTN9.LyH-avNZJmjlo9jV5ZZESXZ6TaC7w41xp0-RpdDLLSY
+
 ### Testing upload
-POST http://localhost:3000/api/session/file/upload
-Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcxNjcwNDk0LCJleHAiOjE3NzE2NzQwOTR9.YrJ9z8QZ4mhit8brRQ7fOdRM8Tfznrk7mkUNSxzH46Y
+POST http://localhost:3000/api/session/1/file/upload
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzcxNzA0MjUzLCJleHAiOjE3NzE3MDc4NTN9.LyH-avNZJmjlo9jV5ZZESXZ6TaC7w41xp0-RpdDLLSY
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary

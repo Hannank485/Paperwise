@@ -3,8 +3,16 @@ import fileController from "../Controller/fileController";
 import multer from "multer";
 
 const upload = multer();
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.post("/upload", upload.single("pdf"), fileController.upload);
+router.post(
+  "/upload",
+  (req, res, next) => {
+    console.log(req.params);
+    next();
+  },
+  upload.single("pdf"),
+  fileController.upload,
+);
 
 export default router;
