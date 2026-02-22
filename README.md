@@ -51,9 +51,9 @@
 
 - [x] pgvector setup and migration
 - [x] Chunk + embedding storage queries (Prisma + raw SQL)
-- [ ] Similarity search — embed user question, fetch top 3 relevant chunks via cosine distance
-- [ ] Chat route — send chunks as context to OpenAI, stream response
-- [ ] Session management routes
+- [x] Similarity search — embed user question, fetch top 3 relevant chunks via cosine distance
+- [x] Chat route — send chunks as context to OpenAI, stream response
+- [x] Session management routes
 - [ ] Frontend (React + TypeScript)
 - [ ] Tests (Vitest + Supertest)
 - [ ] Deployment (Supabase for DB, pgvector pre-installed)
