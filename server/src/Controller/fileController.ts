@@ -27,8 +27,14 @@ const fileController = {
       return res.status(201).json({ message: result });
     } catch (err) {
       if (err instanceof Error) {
-        return res.status(400).json({ message: err.message });
+        return res.status(400).json({
+          message: err.message,
+        });
       }
+
+      return res.status(500).json({
+        message: "Unknown error",
+      });
     }
   },
 };

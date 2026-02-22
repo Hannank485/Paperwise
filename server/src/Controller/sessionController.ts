@@ -16,8 +16,80 @@ const sessionController = {
       const session = await sessionService.create(userId);
       return res.status(200).json({ message: session.id });
     } catch (err) {
-      if (err instanceof Error)
-        return res.status(400).json({ message: err.message });
+      if (err instanceof Error) {
+        return res.status(400).json({
+          message: err.message,
+        });
+      }
+
+      return res.status(500).json({
+        message: "Unknown error",
+      });
+    }
+  },
+  async delete(req: AuthRequest, res: Response) {
+    const userId = req.userId;
+    const sessionId = Number(req.params.id);
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized to create session" });
+    }
+    if (!sessionId) {
+      return res.status(400).json({
+        message: "Invalid session id",
+      });
+    }
+    try {
+      const result = await sessionService.delete(userId, sessionId);
+      if (!result) {
+        return res.status(500).json({ message: "Delete Failed" });
+      }
+      return res.status(200).json({ message: "Delete Successfully" });
+    } catch (err) {
+      if (err instanceof Error) {
+        return res.status(400).json({
+          message: err.message,
+        });
+      }
+      return res.status(500).json({
+        message: "Unknown error",
+      });
+    }
+  },
+  async messageQuestion(req: AuthRequest, res: Response) {
+    const { user } = req.body;
+    const userId = req.userId;
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized to create session" });
+    }
+    if (!user) {
+      return res.status(400).json({ message: "Message data insufficicent" });
+    }
+    const sessionId = Number(req.params.id);
+    if (!sessionId) {
+      return res.status(400).json({ message: "Invalid Session ID" });
+    }
+
+    try {
+      const response = await sessionService.messageQuestion(
+        user,
+        sessionId,
+        userId,
+      );
+      //  return res.status(201).json({ message: response?.choices[0].message.content });
+      return res.status(201).json({ message: response });
+    } catch (err) {
+      if (err instanceof Error) {
+        return res.status(400).json({
+          message: err.message,
+        });
+      }
+      return res.status(500).json({
+        message: "Unknown error",
+      });
     }
   },
 };

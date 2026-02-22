@@ -17,7 +17,16 @@ const fileModel = {
     });
     return document;
   },
+  async findDocument(sessionId: number) {
+    const document = prisma.document.findUnique({
+      where: {
+        sessionId: sessionId,
+      },
+    });
+    return document;
+  },
 
+  // CHUNKS
   async createEmbedding(
     tx: Transaction,
     text: string,
@@ -25,6 +34,12 @@ const fileModel = {
     documentId: number,
   ) {
     await tx.$queryRaw`INSERT INTO "Chunks" (text,embedding,"documentId") VALUES (${text},${embedding}::vector, ${documentId})`;
+  },
+
+  async getContext(documentId: number, questionEmbed: string) {
+    const context =
+      await prisma.$queryRaw`SELECT text FROM "Chunks" WHERE "documentId"=${documentId} ORDER BY embedding <=> ${questionEmbed}::vector LIMIT 3`;
+    return context;
   },
 };
 
