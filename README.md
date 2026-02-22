@@ -50,7 +50,7 @@
 ## What's Left
 
 - [x] pgvector setup and migration
-- [ ] Chunk + embedding storage queries (Prisma + raw SQL)
+- [x] Chunk + embedding storage queries (Prisma + raw SQL)
 - [ ] Similarity search — embed user question, fetch top 3 relevant chunks via cosine distance
 - [ ] Chat route — send chunks as context to OpenAI, stream response
 - [ ] Session management routes
