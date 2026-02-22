@@ -14,7 +14,7 @@ const authController = {
     if (password.length < 8 || password.length > 15) {
       return res
         .status(400)
-        .json({ message: "Credential requirement not met" });
+        .json({ message: "Password should be 8-15 characters" });
     }
 
     // REGISTER PROCESS
@@ -54,6 +54,22 @@ const authController = {
         message: "Unknown error",
       });
     }
+  },
+  async CheckAuth(req: Request, res: Response) {
+    const accessToken = req.cookies.accessToken;
+    if (!accessToken) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const isValid = await authService.checkAuth(accessToken);
+    if (isValid) {
+      return res.status(200).json({ message: "authorised", user: isValid });
+    } else {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  },
+  async logout(req: Request, res: Response) {
+    res.clearCookie("accessToken");
+    res.status(200).json({ message: "logged out" });
   },
 };
 

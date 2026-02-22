@@ -63,6 +63,14 @@ const sessionModel = {
     });
     return messages;
   },
+  async getAllSessions(userId: number) {
+    const sessions = await prisma.session.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+    return sessions;
+  },
 };
 
 export default sessionModel;

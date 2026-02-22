@@ -86,6 +86,10 @@ const sessionService = {
       return Tempresponse;
     }
   },
+  async getAllSessions(userId: number) {
+    const sessions = await sessionModel.getAllSessions(userId);
+    return sessions;
+  },
 };
 
 export default sessionService;

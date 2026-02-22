@@ -52,7 +52,7 @@
 - [x] pgvector setup and migration
 - [x] Chunk + embedding storage queries (Prisma + raw SQL)
 - [x] Similarity search — embed user question, fetch top 3 relevant chunks via cosine distance
-- [x] Chat route — send chunks as context to OpenAI, stream response
+- [x] Chat route — send chunks as context to OpenAI
 - [x] Session management routes
 - [ ] Frontend (React + TypeScript)
 - [ ] Tests (Vitest + Supertest)

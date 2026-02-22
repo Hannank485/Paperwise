@@ -5,6 +5,7 @@ interface AuthRequest extends Request {
 }
 
 const sessionController = {
+  // CREATE SESSION
   async create(req: AuthRequest, res: Response) {
     const userId = req.userId;
     if (!userId) {
@@ -27,6 +28,8 @@ const sessionController = {
       });
     }
   },
+
+  // DELETE SESSION
   async delete(req: AuthRequest, res: Response) {
     const userId = req.userId;
     const sessionId = Number(req.params.id);
@@ -57,6 +60,7 @@ const sessionController = {
       });
     }
   },
+  // MESSAGE QUESTIONS
   async messageQuestion(req: AuthRequest, res: Response) {
     const { user } = req.body;
     const userId = req.userId;
@@ -81,6 +85,26 @@ const sessionController = {
       );
       //  return res.status(201).json({ message: response?.choices[0].message.content });
       return res.status(201).json({ message: response });
+    } catch (err) {
+      if (err instanceof Error) {
+        return res.status(400).json({
+          message: err.message,
+        });
+      }
+      return res.status(500).json({
+        message: "Unknown error",
+      });
+    }
+  },
+  async getAllSessions(req: AuthRequest, res: Response) {
+    const userId = req.userId;
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized to create session" });
+    }
+    try {
+      await sessionService.getAllSessions(userId);
     } catch (err) {
       if (err instanceof Error) {
         return res.status(400).json({
