@@ -20,7 +20,7 @@ const sessionService = {
     if (session?.userId !== userId) {
       throw new Error("UNAUTHORISED");
     }
-    const result = await sessionModel.deleteSession(userId, sessionId);
+    const result = await sessionModel.deleteSession(sessionId, userId);
     return result;
   },
 
@@ -88,6 +88,7 @@ const sessionService = {
   },
   async getAllSessions(userId: number) {
     const sessions = await sessionModel.getAllSessions(userId);
+
     return sessions;
   },
 };

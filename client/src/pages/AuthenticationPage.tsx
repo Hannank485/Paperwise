@@ -69,7 +69,7 @@ function AuthenticationPage({
     }
   };
   return (
-    <div className="flex items-center justify-center h-full">
+    <div className="flex items-center justify-center h-full  w-full">
       {alertOpen && (
         <Alert className="absolute max-w-md top-[5vh] right-[2vw] bg-accent text-primary-foreground">
           <InfoIcon />
@@ -80,11 +80,11 @@ function AuthenticationPage({
         </Alert>
       )}
 
-      <Card className="max-w-sm md:max-w-md w-full pt-6 pb-0 overflow-hidden">
+      <Card className="max-w-xs md:max-w-md w-full pt-6 pb-0 overflow-hidden">
         <CardHeader>
           <div className="flex gap-2 items-center justify-center">
             <Microscope className="text-primary" />
-            <p className="text-center font-bold font-mono text-3xl text-primary">
+            <p className="text-center font-bold font-sans text-3xl text-primary tracking-tight">
               PaperWise
             </p>
           </div>

@@ -67,6 +67,14 @@ const sessionModel = {
     const sessions = await prisma.session.findMany({
       where: {
         userId: userId,
+        isActive: true,
+      },
+      include: {
+        messages: true,
+        document: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return sessions;

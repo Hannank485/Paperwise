@@ -43,6 +43,7 @@ const sessionController = {
         message: "Invalid session id",
       });
     }
+
     try {
       const result = await sessionService.delete(userId, sessionId);
       if (!result) {
@@ -84,7 +85,7 @@ const sessionController = {
         userId,
       );
       //  return res.status(201).json({ message: response?.choices[0].message.content });
-      return res.status(201).json({ message: response });
+      return res.status(201).json({ response });
     } catch (err) {
       if (err instanceof Error) {
         return res.status(400).json({
@@ -104,7 +105,8 @@ const sessionController = {
         .json({ message: "Unauthorized to create session" });
     }
     try {
-      await sessionService.getAllSessions(userId);
+      const sessions = await sessionService.getAllSessions(userId);
+      res.status(200).json({ sessions });
     } catch (err) {
       if (err instanceof Error) {
         return res.status(400).json({

@@ -80,10 +80,7 @@ const fileService = {
       { timeout: 30000 },
     );
   },
-  async getAllSessions(userId: number) {
-    const sessions = await sessionModel;
-    return sessions;
-  },
+
 };
 
 export default fileService;

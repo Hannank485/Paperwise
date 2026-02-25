@@ -3,9 +3,14 @@
 @custom-variant dark (&:is(.dark *));
 * {
   transition:
+    width 0.2s ease-linear,
+    left 0.2s ease-linear,
+    right 0.2s ease-linear;
+}
+body {
+  transition:
     background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
+    color 0.3s ease;
 }
 html:not(.dark) {
   color-scheme: light;
@@ -13,6 +18,7 @@ html:not(.dark) {
 html.dark {
   color-scheme: dark;
 }
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.2178 0 0);
@@ -20,7 +26,7 @@ html.dark {
   --card-foreground: oklch(0.2178 0 0);
   --popover: oklch(0.9707 0.0027 286.3504);
   --popover-foreground: oklch(0.2178 0 0);
-  --primary: oklch(0.5886 0.15 258.7831);
+  --primary: oklch(0.5886 0.2258 258.7831);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(1 0 0);
   --secondary-foreground: oklch(0.2178 0 0);
@@ -71,6 +77,11 @@ html.dark {
   --shadow-2xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.25);
   --tracking-normal: -0.015em;
   --spacing: 0.25rem;
+  --sidebar-width: 16rem;
+  --sidebar-width-icon: 3rem;
+  --sidebar-width-mobile: 18rem;
+  --color-iconBg: oklch(0.96 0.02 255);
+  --color-hover: #f0f0f0;
 }
 
 .dark {
@@ -129,9 +140,12 @@ html.dark {
   --shadow-xl:
     0px 3px 6px 0px hsl(0 0% 0% / 0.3), 0px 8px 10px -1px hsl(0 0% 0% / 0.3);
   --shadow-2xl: 0px 3px 6px 0px hsl(0 0% 0% / 0.75);
+  --color-iconBg: oklch(0.23 0.08 259);
+  --color-hover: #222733;
 }
 
 @theme inline {
+  --sidebar-width: var(--sidebar-width);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -164,11 +178,10 @@ html.dark {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
-
+  --color-iconBg: var(--color-iconBg);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -189,6 +202,7 @@ html.dark {
   --tracking-wide: calc(var(--tracking-normal) + 0.025em);
   --tracking-wider: calc(var(--tracking-normal) + 0.05em);
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  --color-hover: var(--color-hover);
 }
 
 @layer base {
@@ -199,4 +213,10 @@ html.dark {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+}
+
+a.active {
+  background-color: var(--color-iconBg);
+  color: var(--color-primary);
+  font-weight: bold;
 }
