@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { useSessions } from "@/hooks/useSessions";
 import { ArrowRight, Microscope, NotebookText, UploadIcon } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 function SessionCard({
   createdAt,
@@ -59,6 +59,9 @@ function Home() {
   const handleFile = (): void => {
     console.log("hello");
   };
+  useEffect(() => {
+    console.log(sessions);
+  }, [sessions]);
 
   return (
     <div className="max-w-7xl mt-3 flex flex-col items-center mx-auto">
@@ -127,11 +130,15 @@ function Home() {
             </p>
           </div>
           {sessions.length !== 0 ? (
-            <div className="my-4 flex flex-col gap-2 ">
-              {sessions.slice(0, 2).map((session, index) => {
+            <div className="my-4 flex flex-col gap-4 ">
+              {sessions.slice(0, 2).map((session) => {
                 return (
                   <SessionCard
-                    message={session.messages[index].content}
+                    message={
+                      session.messages[0]
+                        ? session.messages[0].content
+                        : "No Messages Yet"
+                    }
                     key={session.id}
                     createdAt={session.createdAt}
                     chars={session.document.content}

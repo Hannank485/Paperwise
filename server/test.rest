@@ -22,11 +22,10 @@ Content-Type: application/json
 
 ### TESTING SESSION CREATION
 POST  http://localhost:3000/api/session/create
-Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcxOTY1NzU2LCJleHAiOjE3NzE5NjkzNTZ9.7gYvQkidJjtXxQPalbiowfha65XOqixXhfLeMr2Ai9A
-
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcyMDAzNTgzLCJleHAiOjE3NzIwMDcxODN9.3QyWmGN0j6LS0Kp28cavMv_2ttvL7Yvkz8v_XES-oMU
 ### Testing upload
-POST http://localhost:3000/api/session/2/upload
-Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcxOTg4Mjg3LCJleHAiOjE3NzE5OTE4ODd9.Sz0csHl40QLWKdT56zNbh1gGeL8eSd8mcGBCB7cSq10
+POST http://localhost:3000/api/session/3/upload
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcyMTA0NTcxLCJleHAiOjE3NzIxMDgxNzF9.1JNYwWh7S_9uUbrqEjqVYeLzcWw35eAEvN9xxL7G69U
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
@@ -41,10 +40,14 @@ POST http://localhost:3000/api/session/2/delete
 Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcxOTg4Mjg3LCJleHAiOjE3NzE5OTE4ODd9.Sz0csHl40QLWKdT56zNbh1gGeL8eSd8mcGBCB7cSq10
 
 ### TESTING MESSAGING POINT 
-POST http://localhost:3000/api/session/2/message/question
-Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcxOTg4Mjg3LCJleHAiOjE3NzE5OTE4ODd9.Sz0csHl40QLWKdT56zNbh1gGeL8eSd8mcGBCB7cSq10
+POST http://localhost:3000/api/session/3/message/question
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcyMDAzNTgzLCJleHAiOjE3NzIwMDcxODN9.3QyWmGN0j6LS0Kp28cavMv_2ttvL7Yvkz8v_XES-oMU
 Content-Type: application/json
 
 {
     "user": "Explain the abstract"
 }
+###GET ALL SESSSIONS
+
+GET http://localhost:3000/api/session/get
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzcyMTA0NTcxLCJleHAiOjE3NzIxMDgxNzF9.1JNYwWh7S_9uUbrqEjqVYeLzcWw35eAEvN9xxL7G69U

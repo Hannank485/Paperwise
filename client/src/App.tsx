@@ -8,6 +8,7 @@ import SidebarComp from "./components/SidebarComp";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { SidebarTrigger } from "./components/ui/sidebar";
 import Sessions from "./pages/Sessions";
+import Chat from "./pages/Chat";
 
 function App() {
   const [dark, setDark] = useState<boolean>((): boolean => {
@@ -97,9 +98,17 @@ function App() {
                         </>
                       }
                     />
+                    <Route
+                      path="/session/chat"
+                      element={
+                        <>
+                          <Chat />
+                        </>
+                      }
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
                   </>
                 )}
-                <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </div>
           </div>

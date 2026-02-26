@@ -14,15 +14,7 @@ type embeddedChunkType = {
 };
 
 const fileService = {
-  async upload(file: Express.Multer.File, sessionId: number, userId: number) {
-    // verify ownership
-    const session = await sessionModel.getSingleSession(sessionId);
-    if (!session) {
-      throw new Error("Session does not exist");
-    }
-    if (session?.userId !== userId) {
-      throw new Error("UNAUTHORISED");
-    }
+  async upload(file: Express.Multer.File, userId: number) {
     // Parse PDF
     async function parsePDF(data: Express.Multer.File["buffer"]) {
       const pdf = new PDFParse({ data: data });
@@ -32,7 +24,11 @@ const fileService = {
       return text;
     }
     const content = await parsePDF(file.buffer);
-
+    // Create Session
+    const session = await sessionModel.create(userId);
+    if (!session) {
+      throw new Error("Session does not exist");
+    }
     const words = content.split(/\s+/);
     // CHECK CREDIBILITY OF THE PDF
     const toneKeywords = [
@@ -57,7 +53,7 @@ const fileService = {
       embeddings = await getAllEmbedded(chunks);
     }
 
-    await prisma.$transaction(
+    const document = await prisma.$transaction(
       async (tx) => {
         // STORING DOCUMENT
         const document = await fileModel.createDocument(
@@ -76,11 +72,12 @@ const fileService = {
             );
           }
         }
+        return document;
       },
       { timeout: 30000 },
     );
+    return { session, isValid: document.isValid };
   },
-
 };
 
 export default fileService;

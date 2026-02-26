@@ -116,10 +116,14 @@ function Sessions() {
           </p>
         </div>
         <div className="grid md:grid-cols-3 grid-cols-1 gap-8 justify-items-center">
-          {session.map((session, index) => {
+          {session.map((session) => {
             return (
               <SessionCard
-                message={session.messages[index].content}
+                message={
+                  session.messages[0]
+                    ? session.messages[0].content
+                    : "No Messages Yet"
+                }
                 key={session.id}
                 createdAt={session.createdAt}
                 chars={session.document.content}

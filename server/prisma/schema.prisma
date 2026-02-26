@@ -21,7 +21,7 @@ model Session {
   createdAt DateTime  @default(now())
   document  Document?
   messages  Message[]
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   isActive  Boolean   @default(true)
 }
 
@@ -31,17 +31,18 @@ model Message {
   content   String
   role      Role
   createdAt DateTime @default(now())
-  session   Session  @relation(fields: [sessionId], references: [id])
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 }
 
 model Document {
   id         Int      @id @default(autoincrement())
+  filename  String
   sessionId  Int      @unique
   content    String
   uploadedAt DateTime @default(now())
   isValid    Boolean
   chunks     Chunks[]
-  session    Session  @relation(fields: [sessionId], references: [id])
+  session    Session  @relation(fields: [sessionId], references: [id],onDelete: Cascade)
 }
 
 model Chunks {
@@ -49,7 +50,7 @@ model Chunks {
   text       String
   documentId Int      
   embedding  Unsupported("vector(1536)")
-  document   Document @relation(fields: [documentId], references: [id])
+  document   Document @relation(fields: [documentId], references: [id],onDelete: Cascade)
 }
 
 enum Role {

@@ -7,12 +7,14 @@ const fileModel = {
     text: string,
     sessionId: number,
     valid: boolean,
+    name: string,
   ) {
     const document = await tx.document.create({
       data: {
         sessionId: sessionId,
         content: text,
         isValid: valid,
+        filename: name,
       },
     });
     return document;

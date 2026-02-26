@@ -49,15 +49,15 @@ const sessionModel = {
     });
   },
 
-  async getMessageHistory(sessionId: number) {
+  async getMessageHistory(sessionId: number, userId: number) {
     const messages = await prisma.session.findUnique({
       where: {
         id: sessionId,
+        userId: userId,
       },
       include: {
         messages: {
-          orderBy: { createdAt: "desc" },
-          take: 4,
+          orderBy: { createdAt: "asc" },
         },
       },
     });

@@ -7,7 +7,6 @@ interface AuthRequest extends Request {
 const fileController = {
   async upload(req: AuthRequest, res: Response) {
     console.log(req.params.id);
-    const sessionId = Number(req.params.id);
 
     const userId = req.userId;
     const file = req.file;
@@ -23,8 +22,8 @@ const fileController = {
       return res.status(400).json({ message: "Invalid File Type" });
     }
     try {
-      const result = await fileService.upload(file, sessionId, userId);
-      return res.status(201).json({ message: result });
+      const result = await fileService.upload(file, userId);
+      return res.status(201).json(result);
     } catch (err) {
       if (err instanceof Error) {
         return res.status(400).json({

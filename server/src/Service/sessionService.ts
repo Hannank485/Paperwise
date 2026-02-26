@@ -54,11 +54,14 @@ const sessionService = {
         context = document.content.slice(0, 3000);
       }
 
-      const messageHistory = await sessionModel.getMessageHistory(sessionId);
+      const messageHistory = await sessionModel.getMessageHistory(
+        sessionId,
+        userId,
+      );
       const history: ChatCompletionMessageParam[] = (
         messageHistory?.messages ?? []
       )
-        .reverse()
+        .slice(-4)
         .map((m) => ({
           role: m.role as "user" | "assistant",
           content: m.content,
