@@ -8,6 +8,7 @@ type Message = {
 };
 type Document = {
   id: number;
+  filename: string;
   content: string;
   isValid: boolean;
 };

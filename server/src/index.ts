@@ -18,7 +18,7 @@ app.use(
 );
 app.use("/api/auth", authRouter);
 app.use("/api/session", authMiddleware, sessionRoute);
-app.use("/api/session/:id", authMiddleware, fileRouter);
+app.use("/api/file", authMiddleware, fileRouter);
 
 app.get("/", () => console.log("Hello"));
 

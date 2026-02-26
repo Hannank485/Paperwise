@@ -14,18 +14,19 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useSessions } from "@/hooks/useSessions";
-import { EllipsisVertical, NotebookText } from "lucide-react";
+import { EllipsisVertical, FileXCorner, NotebookText } from "lucide-react";
 import sessionApi from "@/api/sessionApi";
 function SessionCard({
   createdAt,
-  message,
+  filename,
+
   chars,
   valid,
   id,
 }: {
   id: number;
   createdAt: string;
-  message: string;
+  filename: string;
   chars: string;
   valid: boolean;
 }) {
@@ -37,7 +38,7 @@ function SessionCard({
     month: "2-digit",
     year: "2-digit",
   });
-  const minutes = Math.ceil(chars.length / (200 * 5));
+  const minutes = Math.ceil(chars.length / (300 * 5));
 
   const readTime = minutes <= 10 ? minutes : Math.round(minutes / 5) * 5;
   return (
@@ -54,10 +55,7 @@ function SessionCard({
         >
           <NotebookText size={30} />
         </p>
-        <CardTitle className="group-hover:text-primary">
-          {message.slice(0, 100)}
-          {message.length > 100 ? "..." : ""}
-        </CardTitle>
+        <CardTitle className="group-hover:text-primary">{filename}</CardTitle>
         <CardDescription>Created on {date}</CardDescription>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -105,8 +103,8 @@ function Sessions() {
   const session = useSessions();
 
   return (
-    <div className="max-w-7xl mt-3 flex flex-col items-center mx-auto">
-      <main className="p-4 flex flex-col gap-6 w-full ">
+    <div className="max-w-7xl pt-3 flex flex-col items-center h-full mx-auto">
+      <main className="p-4 flex flex-col gap-6 w-full h-full ">
         <div>
           <h1 className="font-bold text-3xl md:text-5xl text-primary font-sans tracking-tight text-center">
             Your Sessions
@@ -115,24 +113,31 @@ function Sessions() {
             Manage your research sessions and papers.
           </p>
         </div>
-        <div className="grid md:grid-cols-3 grid-cols-1 gap-8 justify-items-center">
-          {session.map((session) => {
-            return (
-              <SessionCard
-                message={
-                  session.messages[0]
-                    ? session.messages[0].content
-                    : "No Messages Yet"
-                }
-                key={session.id}
-                createdAt={session.createdAt}
-                chars={session.document.content}
-                valid={session.document.isValid}
-                id={session.id}
-              />
-            );
-          })}
-        </div>
+        {session.length > 0 ? (
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-8 justify-items-center">
+            {session.map((session) => {
+              return (
+                <SessionCard
+                  filename={session.document.filename}
+                  key={session.id}
+                  createdAt={session.createdAt}
+                  chars={session.document.content}
+                  valid={session.document.isValid}
+                  id={session.id}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className=" h-full flex items-center justify-center flex-col text-muted-foreground/40">
+            <FileXCorner size={40} />
+
+            <h1 className=" text-xl md:text-4xl  text-center">
+              No sessions created yet
+              <br /> Create one by uploading PDF on Homepage
+            </h1>
+          </div>
+        )}
       </main>
     </div>
   );

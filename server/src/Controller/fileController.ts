@@ -6,14 +6,10 @@ interface AuthRequest extends Request {
 
 const fileController = {
   async upload(req: AuthRequest, res: Response) {
-    console.log(req.params.id);
-
     const userId = req.userId;
     const file = req.file;
     if (!userId) {
-      return res
-        .status(401)
-        .json({ message: "Unauthorized to create session" });
+      return res.status(401).json({ message: "Unauthorized" });
     }
     if (!file) {
       return res.status(400).json({ message: "File not sent" });

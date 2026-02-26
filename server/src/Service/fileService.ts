@@ -61,6 +61,7 @@ const fileService = {
           content,
           session.id,
           credible,
+          file.originalname,
         );
         if (credible) {
           for (const item of embeddings) {

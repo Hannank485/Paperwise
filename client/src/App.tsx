@@ -74,13 +74,22 @@ function App() {
             </nav>
             <div className="flex-1">
               <Routes>
-                {auth == false && !loading && (
+                {auth === null && (
                   <Route
-                    path="/"
+                    path="*"
                     element={<AuthenticationPage setAuth={setAuth} />}
                   />
                 )}
-                {auth == true && !loading && (
+                {auth === false && !loading && (
+                  <>
+                    <Route
+                      path="/"
+                      element={<AuthenticationPage setAuth={setAuth} />}
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
+                  </>
+                )}
+                {auth === true && !loading && (
                   <>
                     <Route
                       path="/"

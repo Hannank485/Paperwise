@@ -36,7 +36,7 @@ const sessionController = {
     if (!userId) {
       return res
         .status(401)
-        .json({ message: "Unauthorized to create session" });
+        .json({ message: "Unauthorized to delete session" });
     }
     if (!sessionId) {
       return res.status(400).json({
@@ -66,9 +66,7 @@ const sessionController = {
     const { user } = req.body;
     const userId = req.userId;
     if (!userId) {
-      return res
-        .status(401)
-        .json({ message: "Unauthorized to create session" });
+      return res.status(401).json({ message: "Unauthorized to send message" });
     }
     if (!user) {
       return res.status(400).json({ message: "Message data insufficicent" });
@@ -100,9 +98,7 @@ const sessionController = {
   async getAllSessions(req: AuthRequest, res: Response) {
     const userId = req.userId;
     if (!userId) {
-      return res
-        .status(401)
-        .json({ message: "Unauthorized to create session" });
+      return res.status(401).json({ message: "Unauthorized to fetch session" });
     }
     try {
       const sessions = await sessionService.getAllSessions(userId);

@@ -1,4 +1,6 @@
+import { getErrorMessage } from "@/api/client";
 import sessionApi from "@/api/sessionApi";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,16 +11,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useSessions } from "@/hooks/useSessions";
-import { ArrowRight, Microscope, NotebookText, UploadIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
-
+import {
+  ArrowRight,
+  InfoIcon,
+  Microscope,
+  NotebookText,
+  UploadIcon,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+// SESSION CARD
 function SessionCard({
   createdAt,
-  message,
+  filename,
   chars,
 }: {
   createdAt: string;
-  message: string;
+  filename: string;
   chars: string;
 }) {
   const date = new Date(createdAt).toLocaleDateString("en-GB", {
@@ -26,7 +34,7 @@ function SessionCard({
     month: "2-digit",
     year: "2-digit",
   });
-  const minutes = Math.ceil(chars.length / (200 * 5));
+  const minutes = Math.ceil(chars.length / (300 * 5));
 
   const readTime = minutes <= 10 ? minutes : Math.round(minutes / 5) * 5;
   return (
@@ -38,9 +46,7 @@ function SessionCard({
         <NotebookText />
       </p>
       <CardHeader className="flex-1 p-0">
-        <CardTitle className="group-hover:text-primary">
-          {message.slice(0, 15)}...
-        </CardTitle>
+        <CardTitle className="group-hover:text-primary">{filename}</CardTitle>
         <CardDescription>Created on {date}</CardDescription>
       </CardHeader>
 
@@ -53,18 +59,43 @@ function SessionCard({
   );
 }
 
+// HOME PAGE
+
 function Home() {
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [alert, setAlert] = useState<string | null>(null);
   const sessions = useSessions();
   const inputRef = useRef<HTMLInputElement>(null);
-  const handleFile = (): void => {
-    console.log("hello");
+  const handleFile = async (file: File) => {
+    try {
+      setUploading(true);
+      const data = await sessionApi.uploadFile(file);
+      setUploading(false);
+      console.log(data);
+    } catch (err) {
+      setAlert(getErrorMessage(err));
+      setUploading(false);
+    }
   };
   useEffect(() => {
-    console.log(sessions);
-  }, [sessions]);
-
+    const timeout = setTimeout(() => {
+      setAlert(null);
+    }, 2000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [alert]);
   return (
     <div className="max-w-7xl mt-3 flex flex-col items-center mx-auto">
+      {alert && (
+        <Alert className="absolute max-w-md top-[5vh] right-[2vw] bg-accent text-primary-foreground">
+          <InfoIcon />
+          <AlertTitle className="font-bold text-sm">Alert</AlertTitle>
+          <AlertDescription className="text-primary-foreground">
+            {alert}
+          </AlertDescription>
+        </Alert>
+      )}
       <main className="pt-4 flex flex-col gap-6 w-full ">
         <div className="max-w-2xs md:max-w-full text-xl md:text-3xl  mx-auto ">
           <div className="flex flex-row items-center select-none gap-2 mb-4 justify-center ">
@@ -88,17 +119,26 @@ function Home() {
           </p>
         </div>
         <div className="w-full px-5 md:px-0 hover:-translate-y-0.5 transition-all duration-150 ease-in-out">
+          {/* FILE UPLOAD CARD */}
           <input
             ref={inputRef}
             type="file"
             accept=".pdf"
             className="hidden"
-            onChange={handleFile}
+            onChange={(e) => {
+              if (e.currentTarget.files) {
+                handleFile(e.currentTarget.files[0]);
+              } else {
+                setAlert("File not Uploaded");
+              }
+            }}
           />
           <Card
             className="border-2 select-none cursor-pointer border-primary/10 bg-background hover:bg-[#eef5ff]/40 hover:dark:bg-[#0b1f3a]/20 shadow-none flex flex-col group items-center max-w-lg md:max-w-2xl mx-auto"
             onClick={() => {
-              inputRef.current?.click();
+              if (!uploading) {
+                inputRef.current?.click();
+              }
             }}
           >
             <CardHeader className="flex justify-center group-hover:scale-110">
@@ -107,17 +147,26 @@ function Home() {
               </CardTitle>
             </CardHeader>
 
-            <CardContent className="text-center">
-              <h2 className="text-2xl ">Upload New Paper</h2>
-              <p className=" text-muted-foreground mt-px">
-                Drag & drop a PDF here to start analyzing or click to browse
-                your files.
-              </p>
+            <CardContent className="text-center flex-1">
+              {!uploading ? (
+                <>
+                  {" "}
+                  <h2 className="text-2xl ">Upload New Paper</h2>
+                  <p className=" text-muted-foreground mt-px">
+                    Drag & drop a PDF here to start analyzing or click to browse
+                    your files.
+                  </p>
+                </>
+              ) : (
+                <h1 className="text-2xl font-semibold">Uploading...</h1>
+              )}
             </CardContent>
             <CardFooter>
               <Button className="scale-115 font-bold cursor-pointer ">
-                Start Session
-                <ArrowRight className="group-hover:-rotate-45 transition-all duration-200 ease-in-out" />
+                {!uploading ? "Start Session" : "Please Wait"}
+                {uploading === false && (
+                  <ArrowRight className="group-hover:-rotate-45 transition-all duration-200 ease-in-out" />
+                )}
               </Button>
             </CardFooter>
           </Card>
@@ -134,11 +183,7 @@ function Home() {
               {sessions.slice(0, 2).map((session) => {
                 return (
                   <SessionCard
-                    message={
-                      session.messages[0]
-                        ? session.messages[0].content
-                        : "No Messages Yet"
-                    }
+                    filename={session.document.filename}
                     key={session.id}
                     createdAt={session.createdAt}
                     chars={session.document.content}
