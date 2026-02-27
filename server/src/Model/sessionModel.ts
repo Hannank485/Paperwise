@@ -36,22 +36,22 @@ const sessionModel = {
     });
     return result;
   },
-  async message(user: string, assistant: string, sessionId: number) {
-    await prisma.$transaction(async (tx) => {
-      await tx.message.create({
-        data: {
-          sessionId: sessionId,
-          role: Role.user,
-          content: user,
-        },
-      });
-      await tx.message.create({
-        data: {
-          sessionId: sessionId,
-          role: Role.assistant,
-          content: assistant,
-        },
-      });
+  async storeUserMessage(question: string, sessionId: number) {
+    await prisma.message.create({
+      data: {
+        sessionId: sessionId,
+        role: Role.user,
+        content: question,
+      },
+    });
+  },
+  async storeAiMessage(response: string, sessionId: number) {
+    await prisma.message.create({
+      data: {
+        sessionId: sessionId,
+        role: Role.assistant,
+        content: response,
+      },
     });
   },
 

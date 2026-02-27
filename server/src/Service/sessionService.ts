@@ -24,7 +24,7 @@ const sessionService = {
     return result;
   },
 
-  async messageQuestion(user: string, sessionId: number, userId: number) {
+  async messageQuestion(question: string, sessionId: number, userId: number) {
     const session = await sessionModel.getSingleSession(sessionId);
     if (!session) {
       throw new Error("Session does not exist");
@@ -36,58 +36,56 @@ const sessionService = {
     if (!document) {
       throw new Error("NO DOCUMENT UPLOADED");
     }
+    let context: string = "";
+
     if (document.isValid) {
-      const embedding = (await embedChunks(user)).join(",");
+      const embedding = (await embedChunks(question)).join(",");
       const questionString = `[${embedding}]`;
-      let context: string = "";
-      if (document.isValid) {
-        const chunks = (await fileModel.getContext(
-          document.id,
-          questionString,
-        )) as {
-          text: string;
-        }[];
-        context = (chunks as { text: string }[])
-          .map((c) => c.text)
-          .join("\n\n");
-      } else {
-        context = document.content.slice(0, 3000);
-      }
-
-      const messageHistory = await sessionModel.getMessageHistory(
-        sessionId,
-        userId,
-      );
-      const history: ChatCompletionMessageParam[] = (
-        messageHistory?.messages ?? []
-      )
-        .slice(-4)
-        .map((m) => ({
-          role: m.role as "user" | "assistant",
-          content: m.content,
-        }));
-      // const response = await openai.chat.completions.create({
-      //   model: "gpt-5-mini",
-      //   messages: [
-      //     {
-      //       role: "system",
-      //       content:
-      //         "You are a Research Assistant, assist the user in understanding the research paper",
-      //     },
-
-      //     ...history,
-
-      //     {
-      //       role: "user",
-      //       content: `the context provided to you is ${context}\n\n and the question is ${user}`,
-      //     },
-      //   ],
-      // });
-      const Tempresponse = "YO this is temp response";
-      await sessionModel.message(user, Tempresponse, sessionId);
-
-      return Tempresponse;
+      const chunks = (await fileModel.getContext(
+        document.id,
+        questionString,
+      )) as {
+        text: string;
+      }[];
+      context = (chunks as { text: string }[]).map((c) => c.text).join("\n\n");
+    } else {
+      context = document.content.slice(0, 3000);
     }
+
+    const messageHistory = await sessionModel.getMessageHistory(
+      sessionId,
+      userId,
+    );
+    await sessionModel.storeUserMessage(question, sessionId);
+    const history: ChatCompletionMessageParam[] = (
+      messageHistory?.messages ?? []
+    )
+      .slice(-4)
+      .map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
+    // const response = await openai.chat.completions.create({
+    //   model: "gpt-5-mini",
+    //   messages: [
+    //     {
+    //       role: "system",
+    //       content:
+    //         "You are a Research Assistant, assist the user in understanding the research paper",
+    //     },
+
+    //     ...history,
+
+    //     {
+    //       role: "user",
+    //       content: `the context provided to you is ${context}\n\n and the question is ${user}`,
+    //     },
+    //   ],
+    // });
+    const Tempresponse = "YO this is temp response";
+    await sessionModel.storeAiMessage(Tempresponse, sessionId);
+
+    return Tempresponse;
   },
   async getAllSessions(userId: number) {
     const sessions = await sessionModel.getAllSessions(userId);

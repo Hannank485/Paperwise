@@ -12,7 +12,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://192.168.1.73:5173",
     credentials: true,
   }),
 );
@@ -20,6 +20,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/session", authMiddleware, sessionRoute);
 app.use("/api/file", authMiddleware, fileRouter);
 
-app.get("/", () => console.log("Hello"));
-
-app.listen(PORT, () => console.log("Server is up and running on ", PORT));
+app.listen(Number(PORT), "0.0.0.0", () =>
+  console.log("Server is up and running on ", PORT),
+);

@@ -63,12 +63,12 @@ const sessionController = {
   },
   // MESSAGE QUESTIONS
   async messageQuestion(req: AuthRequest, res: Response) {
-    const { user } = req.body;
+    const question = req.body;
     const userId = req.userId;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized to send message" });
     }
-    if (!user) {
+    if (!question) {
       return res.status(400).json({ message: "Message data insufficicent" });
     }
     const sessionId = Number(req.params.id);
@@ -78,7 +78,7 @@ const sessionController = {
 
     try {
       const response = await sessionService.messageQuestion(
-        user,
+        question,
         sessionId,
         userId,
       );

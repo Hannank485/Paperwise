@@ -37,8 +37,8 @@ const authController = {
     try {
       const accessToken = await authService.login(usernameLower, password);
       res.cookie("accessToken", accessToken, {
-        secure: true,
-        sameSite: "strict",
+        secure: false,
+        sameSite: "lax",
         httpOnly: true,
         maxAge: 60 * 60 * 1000,
       });

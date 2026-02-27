@@ -60,7 +60,7 @@ function Chat() {
         </p>
       </div>
       <div className="flex flex-col justify-between h-full max-w-3xl mx-auto w-full">
-        <div className="bg-sidebar flex-1 flex flex-col h-full pt-4">
+        <div className="bg-sidebar flex-1 flex flex-col h-full pt-4 gap-4">
           {session?.messages.map((msg, index) => {
             return (
               <div

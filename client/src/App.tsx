@@ -55,7 +55,7 @@ function App() {
 
           <div className="flex flex-col h-full w-full relative">
             <nav
-              className="w-full flex pt-4 pb-2 px-2 border-b  top-0    backdrop-blur-2xl"
+              className="w-full flex py-2 px-2 border-b  top-0    backdrop-blur-2xl"
               style={{
                 justifyContent: auth ? "space-between" : "flex-end",
                 position: auth ? "sticky" : "fixed",

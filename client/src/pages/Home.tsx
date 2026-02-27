@@ -55,7 +55,9 @@ function SessionCard({
         <NotebookText />
       </p>
       <CardHeader className="flex-1 p-0">
-        <CardTitle className="group-hover:text-primary">{filename}</CardTitle>
+        <CardTitle className="group-hover:text-primary">
+          {filename.slice(0, 15)}....pdf
+        </CardTitle>
         <CardDescription>Created on {date}</CardDescription>
       </CardHeader>
 
@@ -107,8 +109,8 @@ function Home() {
           </AlertDescription>
         </Alert>
       )}
-      <main className="pt-4 flex flex-col gap-6 w-full ">
-        <div className="max-w-2xs md:max-w-full text-xl md:text-3xl  mx-auto ">
+      <main className="pt-4 flex flex-col gap-10 w-full ">
+        <div className="max-w-sm md:max-w-full text-xl md:text-3xl  mx-auto ">
           <div className="flex flex-row items-center select-none gap-2 mb-4 justify-center ">
             <p className="bg-iconBg p-2 rounded-md ">
               <Microscope
@@ -121,7 +123,7 @@ function Home() {
             </p>
           </div>
           <h1 className="font-bold text-4xl md:text-6xl text-primary font-sans tracking-tight text-center ">
-            Research made simple.
+            Chat with Research Paper.
           </h1>
           <p className="text-muted-foreground/60 text-base md:text-lg mt-2 text-center">
             Upload a paper to get insights and summary instantly.
@@ -164,8 +166,7 @@ function Home() {
                   {" "}
                   <h2 className="text-2xl ">Upload New Paper</h2>
                   <p className=" text-muted-foreground mt-px">
-                    Drag & drop a PDF here to start analyzing or click to browse
-                    your files.
+                    Click here to upload a PDF here and start analyzing.
                   </p>
                 </>
               ) : (
