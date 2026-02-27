@@ -19,12 +19,15 @@ import {
   UploadIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 // SESSION CARD
 function SessionCard({
   createdAt,
   filename,
   chars,
+  id,
 }: {
+  id: number;
   createdAt: string;
   filename: string;
   chars: string;
@@ -37,8 +40,14 @@ function SessionCard({
   const minutes = Math.ceil(chars.length / (300 * 5));
 
   const readTime = minutes <= 10 ? minutes : Math.round(minutes / 5) * 5;
+  const navigate = useNavigate();
   return (
-    <Card className="w-full flex flex-row justify-between items-center group hover:border-primary/40 border-2 cursor-pointer group">
+    <Card
+      className="w-full flex flex-row justify-between items-center group hover:border-primary/40 border-2 cursor-pointer group"
+      onClick={() => {
+        navigate(`/session/${id}/chat`);
+      }}
+    >
       <p
         className="ml-4 p-2 rounded-md 
        group-hover:bg-iconBg group-hover:text-primary bg-hover"
@@ -62,6 +71,7 @@ function SessionCard({
 // HOME PAGE
 
 function Home() {
+  const navigate = useNavigate();
   const [uploading, setUploading] = useState<boolean>(false);
   const [alert, setAlert] = useState<string | null>(null);
   const sessions = useSessions();
@@ -71,7 +81,8 @@ function Home() {
       setUploading(true);
       const data = await sessionApi.uploadFile(file);
       setUploading(false);
-      console.log(data);
+      console.log(data.session.id);
+      navigate(`/session/${data.session.id}/chat`);
     } catch (err) {
       setAlert(getErrorMessage(err));
       setUploading(false);
@@ -187,6 +198,7 @@ function Home() {
                     key={session.id}
                     createdAt={session.createdAt}
                     chars={session.document.content}
+                    id={session.id}
                   />
                 );
               })}

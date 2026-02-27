@@ -109,9 +109,24 @@ const sessionController = {
           message: err.message,
         });
       }
-      return res.status(500).json({
-        message: "Unknown error",
-      });
+    }
+  },
+  async getSingleSession(req: AuthRequest, res: Response) {
+    const userId = req.userId;
+    const sessionId = Number(req.params.id);
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized to fetch session" });
+    }
+    try {
+      const session = await sessionService.getSingleSession(sessionId, userId);
+      return res.status(200).json(session);
+    } catch (err) {
+      if (err instanceof Error) {
+        return res.status(401).json({
+          message: err.message,
+        });
+      }
     }
   },
 };

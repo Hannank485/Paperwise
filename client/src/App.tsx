@@ -108,7 +108,7 @@ function App() {
                       }
                     />
                     <Route
-                      path="/session/chat"
+                      path="/session/:id/chat"
                       element={
                         <>
                           <Chat />

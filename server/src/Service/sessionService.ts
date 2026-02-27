@@ -7,10 +7,10 @@ import { response } from "express";
 
 const openai = new OpenAI();
 const sessionService = {
-  async create(userId: number) {
-    const session = await sessionModel.create(userId);
-    return session;
-  },
+  // async create(userId: number) {
+  //   const session = await sessionModel.create(userId);
+  //   return session;
+  // },
 
   async delete(userId: number, sessionId: number) {
     const session = await sessionModel.getSingleSession(sessionId);
@@ -93,6 +93,14 @@ const sessionService = {
     const sessions = await sessionModel.getAllSessions(userId);
 
     return sessions;
+  },
+  async getSingleSession(sessionId: number, userId: number) {
+    const session = await sessionModel.getSingleSession(sessionId);
+    if (session?.userId !== userId) {
+      throw new Error("UNAUTHORISED");
+    }
+
+    return session;
   },
 };
 

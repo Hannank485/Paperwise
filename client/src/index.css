@@ -101,7 +101,7 @@ html.dark {
   --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.6633 0.2236 28.2919);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.3414 0.0034 286.2157);
+  --border: oklch(0.22 0.002 286);
   --input: oklch(0.3414 0.0034 286.2157);
   --ring: oklch(0.5886 0.2258 258.7831);
   --chart-1: oklch(0.5886 0.2258 258.7831);

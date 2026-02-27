@@ -16,6 +16,7 @@ import {
 import { useSessions } from "@/hooks/useSessions";
 import { EllipsisVertical, FileXCorner, NotebookText } from "lucide-react";
 import sessionApi from "@/api/sessionApi";
+import { useNavigate } from "react-router";
 function SessionCard({
   createdAt,
   filename,
@@ -39,13 +40,13 @@ function SessionCard({
     year: "2-digit",
   });
   const minutes = Math.ceil(chars.length / (300 * 5));
-
+  const navigate = useNavigate();
   const readTime = minutes <= 10 ? minutes : Math.round(minutes / 5) * 5;
   return (
     <Card
-      className="w-full  group hover:border-primary/40 border-2 cursor-pointer group"
+      className="min-w-0 w-xs md:w-sm group hover:border-primary/40 border-2 cursor-pointer group"
       onClick={() => {
-        console.log("hello");
+        navigate(`/session/${id}/chat`);
       }}
     >
       <CardHeader>

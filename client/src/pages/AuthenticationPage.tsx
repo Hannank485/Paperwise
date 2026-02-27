@@ -71,7 +71,7 @@ function AuthenticationPage({
   return (
     <div className="flex items-center justify-center h-full  w-full">
       {alertOpen && (
-        <Alert className="absolute max-w-md top-[5vh] right-[2vw] bg-accent text-primary-foreground">
+        <Alert className="absolute max-w-sm top-[5vh] right-[2vw] bg-accent text-primary-foreground">
           <InfoIcon />
           <AlertTitle>Alert</AlertTitle>
           <AlertDescription className="text-primary-foreground">

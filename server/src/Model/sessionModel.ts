@@ -14,6 +14,12 @@ const sessionModel = {
       where: {
         id: sessionId,
       },
+      include: {
+        messages: {
+          orderBy: { createdAt: "asc" },
+        },
+        document: true,
+      },
     });
     return session;
   },
