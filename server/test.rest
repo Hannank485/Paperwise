@@ -41,11 +41,11 @@ Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzc
 
 ### TESTING MESSAGING POINT 
 POST http://localhost:3000/api/session/9/message
-Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzcyMTkxMDU5LCJleHAiOjE3NzIxOTQ2NTl9.8s1GJUpikIsdH5faMxGyu_dkb_V8lZksJHP9t2tQkOQ
+Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNzcyMjMxMTQ5LCJleHAiOjE3NzIyMzQ3NDl9.R55BNhvy5k9KsNUBG6HNWogtLR8FoMDsxH7JvsFevbs
 Content-Type: application/json
 
 {
-    "user": "Explain the abstract"
+    "question": "Explain the abstract"
 }
 ###GET ALL SESSSIONS
 

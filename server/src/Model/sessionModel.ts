@@ -46,7 +46,7 @@ const sessionModel = {
     });
   },
   async storeAiMessage(response: string, sessionId: number) {
-    await prisma.message.create({
+    return await prisma.message.create({
       data: {
         sessionId: sessionId,
         role: Role.assistant,

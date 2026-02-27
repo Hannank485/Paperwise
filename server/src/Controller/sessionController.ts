@@ -63,7 +63,7 @@ const sessionController = {
   },
   // MESSAGE QUESTIONS
   async messageQuestion(req: AuthRequest, res: Response) {
-    const question = req.body;
+    const { question } = req.body;
     const userId = req.userId;
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized to send message" });

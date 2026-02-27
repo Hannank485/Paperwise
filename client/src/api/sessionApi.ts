@@ -25,8 +25,10 @@ const sessionApi = {
     const data = await result.data;
     return data;
   },
-  async sendQuestion(id: number) {
-    const result = await api.post(`/session/${id}/message`);
+  async sendQuestion(id: number, question: string) {
+    const result = await api.post(`/session/${id}/message`, {
+      question: question,
+    });
     const data = await result.data;
     return data;
   },

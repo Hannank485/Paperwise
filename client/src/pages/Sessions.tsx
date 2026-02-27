@@ -5,6 +5,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 import {
   Card,
   CardFooter,
@@ -14,13 +16,21 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useSessions } from "@/hooks/useSessions";
-import { EllipsisVertical, FileXCorner, NotebookText } from "lucide-react";
+import type { Session } from "@/hooks/useSessions";
+import {
+  EllipsisVertical,
+  FileXCorner,
+  InfoIcon,
+  NotebookText,
+} from "lucide-react";
 import sessionApi from "@/api/sessionApi";
 import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { getErrorMessage } from "@/api/client";
 function SessionCard({
   createdAt,
   filename,
-
+  handleDelete,
   chars,
   valid,
   id,
@@ -28,12 +38,10 @@ function SessionCard({
   id: number;
   createdAt: string;
   filename: string;
+  handleDelete: (id: number) => Promise<void>;
   chars: string;
   valid: boolean;
 }) {
-  const handleDelete = async () => {
-    await sessionApi.deleteSession(id);
-  };
   const date = new Date(createdAt).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "2-digit",
@@ -64,7 +72,6 @@ function SessionCard({
               className="hover:bg-hover p-2 rounded-md"
               onClick={(e) => {
                 e.stopPropagation();
-                console.log("hello2");
               }}
             >
               <EllipsisVertical />
@@ -74,8 +81,9 @@ function SessionCard({
             <DropdownMenuGroup>
               <DropdownMenuItem
                 className="cursor-pointer hover:bg-destructive! hover:text-background!"
-                onClick={() => {
-                  handleDelete();
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(id);
                 }}
               >
                 Delete
@@ -101,10 +109,34 @@ function SessionCard({
 }
 
 function Sessions() {
-  const session = useSessions();
+  const [session, setSession] = useState<Session[]>([]);
+  const data = useSessions();
+  const [alert, setAlert] = useState<string | null>(null);
 
+  useEffect(() => {
+    setSession(data);
+  }, [data]);
+  const handleDelete = async (id: number) => {
+    const initialSession = session;
+    setSession((prev) => prev.filter((s) => s.id !== id));
+    try {
+      await sessionApi.deleteSession(id);
+    } catch (err) {
+      setAlert(getErrorMessage(err));
+      setSession(initialSession);
+    }
+  };
   return (
     <div className="max-w-7xl pt-3 flex flex-col items-center h-full mx-auto">
+      {alert && (
+        <Alert className="absolute max-w-sm top-[5vh] right-[2vw] bg-destructive text-primary-foreground">
+          <InfoIcon />
+          <AlertTitle className="font-bold text-sm">Alert</AlertTitle>
+          <AlertDescription className="text-primary-foreground">
+            {alert}
+          </AlertDescription>
+        </Alert>
+      )}
       <main className="p-4 flex flex-col gap-6 w-full h-full ">
         <div>
           <h1 className="font-bold text-3xl md:text-5xl text-primary font-sans tracking-tight text-center">
@@ -119,6 +151,7 @@ function Sessions() {
             {session.map((session) => {
               return (
                 <SessionCard
+                  handleDelete={handleDelete}
                   filename={session.document.filename}
                   key={session.id}
                   createdAt={session.createdAt}

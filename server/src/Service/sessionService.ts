@@ -39,7 +39,9 @@ const sessionService = {
     let context: string = "";
 
     if (document.isValid) {
-      const embedding = (await embedChunks(question)).join(",");
+      const embedding = (await embedChunks(question)).data[0].embedding.join(
+        ",",
+      );
       const questionString = `[${embedding}]`;
       const chunks = (await fileModel.getContext(
         document.id,
@@ -65,27 +67,32 @@ const sessionService = {
         role: m.role as "user" | "assistant",
         content: m.content,
       }));
-    // const response = await openai.chat.completions.create({
-    //   model: "gpt-5-mini",
-    //   messages: [
-    //     {
-    //       role: "system",
-    //       content:
-    //         "You are a Research Assistant, assist the user in understanding the research paper",
-    //     },
+    const aiResponse = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "Answer based only on the provided context. Be concise and factual. If the answer is not found in the context, say so explicitly. Do not make up information",
+        },
 
-    //     ...history,
+        ...history,
 
-    //     {
-    //       role: "user",
-    //       content: `the context provided to you is ${context}\n\n and the question is ${user}`,
-    //     },
-    //   ],
-    // });
-    const Tempresponse = "YO this is temp response";
-    await sessionModel.storeAiMessage(Tempresponse, sessionId);
+        {
+          role: "user",
+          content: `the context provided to you is ${context}\n\n and the question is ${question}`,
+        },
+      ],
+      max_tokens: 600,
+      temperature: 0.2,
+    });
 
-    return Tempresponse;
+    const response = await sessionModel.storeAiMessage(
+      aiResponse.choices[0].message.content ?? "No response Generated",
+      sessionId,
+    );
+    console.log(context);
+    return response;
   },
   async getAllSessions(userId: number) {
     const sessions = await sessionModel.getAllSessions(userId);

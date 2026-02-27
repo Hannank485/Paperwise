@@ -1,6 +1,6 @@
 import sessionApi from "@/api/sessionApi";
 import { useEffect, useState } from "react";
-type Message = {
+export type Message = {
   id: number;
   content: string;
   role: string;

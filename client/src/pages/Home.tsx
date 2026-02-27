@@ -99,7 +99,7 @@ function Home() {
     };
   }, [alert]);
   return (
-    <div className="max-w-7xl mt-3 flex flex-col items-center mx-auto">
+    <div className="max-w-7xl mt-3 flex flex-col items-center mx-auto overflow-auto">
       {alert && (
         <Alert className="absolute max-w-md top-[5vh] right-[2vw] bg-accent text-primary-foreground">
           <InfoIcon />
@@ -153,6 +153,7 @@ function Home() {
                 inputRef.current?.click();
               }
             }}
+            style={{ cursor: uploading ? "wait" : "pointer" }}
           >
             <CardHeader className="flex justify-center group-hover:scale-110">
               <CardTitle className="bg-[#eef5ff] dark:bg-[#0b1f3a] p-4 rounded-full">
