@@ -54,7 +54,7 @@
 - [x] Similarity search — embed user question, fetch top 3 relevant chunks via cosine distance
 - [x] Chat route — send chunks as context to OpenAI
 - [x] Session management routes
-- [ ] Frontend (React + TypeScript)
+- [x] Frontend (React + TypeScript)
 - [ ] Tests (Vitest + Supertest)
 - [ ] Deployment (Supabase for DB, pgvector pre-installed)
 
