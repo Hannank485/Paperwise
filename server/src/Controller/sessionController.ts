@@ -102,7 +102,7 @@ const sessionController = {
     }
     try {
       const sessions = await sessionService.getAllSessions(userId);
-      res.status(200).json({ sessions });
+      return res.status(200).json({ sessions });
     } catch (err) {
       if (err instanceof Error) {
         return res.status(400).json({

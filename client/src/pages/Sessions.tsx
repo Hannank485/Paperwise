@@ -6,7 +6,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
 import {
   Card,
   CardFooter,
@@ -27,6 +26,7 @@ import sessionApi from "@/api/sessionApi";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { getErrorMessage } from "@/api/client";
+import { Skeleton } from "@/components/ui/skeleton";
 function SessionCard({
   createdAt,
   filename,
@@ -64,7 +64,11 @@ function SessionCard({
         >
           <NotebookText size={30} />
         </p>
-        <CardTitle className="group-hover:text-primary">{filename}</CardTitle>
+        <CardTitle className="group-hover:text-primary">
+          {" "}
+          {filename.slice(0, 20)}
+          {filename.length > 20 && "...."}
+        </CardTitle>
         <CardDescription>Created on {date}</CardDescription>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -98,7 +102,7 @@ function SessionCard({
           {readTime} min Read
         </p>
         <p
-          className="text-xs px-3 rounded-xl py-0.5 "
+          className="text-xs text-black px-3 rounded-xl py-0.5 "
           style={{ backgroundColor: valid ? "#DCFCE7" : "#FEE2E2" }}
         >
           {valid ? "Valid" : "Not Valid"}
@@ -110,12 +114,12 @@ function SessionCard({
 
 function Sessions() {
   const [session, setSession] = useState<Session[]>([]);
-  const data = useSessions();
+  const { sessions, loading } = useSessions();
   const [alert, setAlert] = useState<string | null>(null);
 
   useEffect(() => {
-    setSession(data);
-  }, [data]);
+    setSession(sessions);
+  }, [sessions]);
   const handleDelete = async (id: number) => {
     const initialSession = session;
     setSession((prev) => prev.filter((s) => s.id !== id));
@@ -146,7 +150,9 @@ function Sessions() {
             Manage your research sessions and papers.
           </p>
         </div>
-        {session.length > 0 ? (
+        {loading ? (
+          <Skeleton className="h-48 bg-muted min-w-0 w-xs md:w-sm" />
+        ) : session.length > 0 ? (
           <div className="grid md:grid-cols-3 grid-cols-1 gap-8 justify-items-center">
             {session.map((session) => {
               return (

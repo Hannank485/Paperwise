@@ -42,7 +42,7 @@ const authController = {
         httpOnly: true,
         maxAge: 60 * 60 * 1000,
       });
-      return res.status(200).json({ message: accessToken });
+      return res.status(200).json({ message: "Logged In" });
     } catch (err) {
       if (err instanceof Error) {
         return res.status(400).json({

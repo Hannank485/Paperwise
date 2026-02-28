@@ -14,10 +14,13 @@ import { useSessions } from "@/hooks/useSessions";
 import {
   ArrowRight,
   InfoIcon,
+  Loader2,
   Microscope,
   NotebookText,
   UploadIcon,
 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 // SESSION CARD
@@ -56,7 +59,8 @@ function SessionCard({
       </p>
       <CardHeader className="flex-1 p-0">
         <CardTitle className="group-hover:text-primary">
-          {filename.slice(0, 15)}....pdf
+          {filename.slice(0, 20)}
+          {filename.length > 20 && "...."}
         </CardTitle>
         <CardDescription>Created on {date}</CardDescription>
       </CardHeader>
@@ -76,7 +80,7 @@ function Home() {
   const navigate = useNavigate();
   const [uploading, setUploading] = useState<boolean>(false);
   const [alert, setAlert] = useState<string | null>(null);
-  const sessions = useSessions();
+  const { sessions, loading } = useSessions();
   const inputRef = useRef<HTMLInputElement>(null);
   const handleFile = async (file: File) => {
     try {
@@ -176,7 +180,11 @@ function Home() {
             </CardContent>
             <CardFooter>
               <Button className="scale-115 font-bold cursor-pointer ">
-                {!uploading ? "Start Session" : "Please Wait"}
+                {!uploading ? (
+                  "Upload Session"
+                ) : (
+                  <Loader2 className="animate-spin text-white scale-125" />
+                )}
                 {uploading === false && (
                   <ArrowRight className="group-hover:-rotate-45 transition-all duration-200 ease-in-out" />
                 )}
@@ -191,7 +199,9 @@ function Home() {
               View All
             </p>
           </div>
-          {sessions.length !== 0 ? (
+          {loading ? (
+            <Skeleton className="h-16 my-4 w-full bg-muted" />
+          ) : sessions.length !== 0 ? (
             <div className="my-4 flex flex-col gap-4 ">
               {sessions.slice(0, 2).map((session) => {
                 return (

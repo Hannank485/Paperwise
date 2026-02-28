@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import AuthenticationPage from "./pages/AuthenticationPage";
 import { useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { Loader2, Moon, Sun } from "lucide-react";
 import authApi from "./api/authApi";
 import Home from "./pages/Home";
 import SidebarComp from "./components/SidebarComp";
@@ -29,10 +29,12 @@ function App() {
   useEffect(() => {
     async function CheckAuth() {
       try {
+        setLoading(true);
         await authApi.checkAuth();
         setLoading(false);
         setAuth(true);
       } catch {
+        setLoading(false);
         setAuth(false);
       }
     }
@@ -76,8 +78,13 @@ function App() {
               <Routes>
                 {auth === null && (
                   <Route
-                    path="*"
-                    element={<AuthenticationPage setAuth={setAuth} />}
+                    path="/"
+                    element={
+                      <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 scale-200 flex items-center gap-4">
+                        <p className="text-accent">Loading...</p>
+                        <Loader2 className="text-accent animate-spin " />
+                      </div>
+                    }
                   />
                 )}
                 {auth === false && !loading && (

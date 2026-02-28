@@ -22,14 +22,17 @@ export type Session = {
 };
 export function useSessions() {
   const [sessions, setSessions] = useState<Session[]>([]);
-
+  const [loading, setLoading] = useState<boolean>(false);
   useEffect(() => {
     const fetchSessions = async () => {
+      setLoading(true);
+
       const data = await sessionApi.getSessions();
       setSessions(data.sessions);
+      setLoading(false);
     };
     fetchSessions();
   }, []);
 
-  return sessions;
+  return { sessions, loading };
 }

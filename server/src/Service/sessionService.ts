@@ -67,13 +67,35 @@ const sessionService = {
         role: m.role as "user" | "assistant",
         content: m.content,
       }));
+    const keywords = [
+      "review",
+      "summary",
+      "summarize",
+      "overall",
+      "main findings",
+      "experiments",
+      "paper about",
+    ];
     const aiResponse = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content:
-            "Answer based only on the provided context. Be concise and factual. If the answer is not found in the context, say so explicitly. Do not make up information",
+          content: `You answer questions about a research paper using ONLY the provided context.
+
+Rules:
+- Base answers strictly on the context.
+- Do NOT invent information.
+- If the answer is not explicitly stated, infer cautiously from the context when reasonable. If no relevant information exists, say so clearly.
+- If related information exists, explain what the paper discusses instead.
+- When answering broad questions (such as summaries, reviews, or experimental results), extract and combine relevant information from multiple parts of the context.
+- Be concise and factual.
+- Organize answers into short sections or bullet points when possible.
+- Prefer clear explanations over long paragraphs.
+- Determine whether the paper appears to be an experimental study or a review article based on the context, and answer accordingly.
+- When relevant information exists, present it directly. Avoid starting the answer by saying the information is not available unless nothing relevant is found.
+If the question is unrelated to the paper, say that the context does not contain relevant information.
+`,
         },
 
         ...history,
