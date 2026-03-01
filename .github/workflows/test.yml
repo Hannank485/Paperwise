@@ -9,9 +9,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL=${{secrets.DATABASE_URL}}
-      ACCESS_TOKEN=${{secrets.ACCESS_TOKEN}}
-      OPENAI_API_KEY=${{secrets.OPENAI_API_KEY}}
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
+      ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
+      OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
