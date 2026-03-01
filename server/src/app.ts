@@ -21,7 +21,7 @@ app.get("/health", (req, res) => {
 });
 app.use(
   cors({
-    origin: "https://https://paperwise-five.vercel.app",
+    origin: "https://paperwise-five.vercel.app",
     credentials: true,
   }),
 );
