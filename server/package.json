@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",
@@ -31,7 +31,10 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
+    "@types/supertest": "^7.2.0",
+    "supertest": "^7.2.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }

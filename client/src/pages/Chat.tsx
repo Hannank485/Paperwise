@@ -156,9 +156,11 @@ function Chat() {
         </div>
 
         <form
-          className="bg-sidebar py-10 px-4 flex items-center justify-center"
+          className={`bg-sidebar py-10 px-4 flex items-center justify-center ${loading && "cursor-wait"}`}
           onSubmit={(e) => {
-            handleSubmit(e);
+            if (!loading) {
+              handleSubmit(e);
+            }
           }}
         >
           <div className="sticky bg-background  max-w-3xl w-full   rounded-2xl  border-2  ">
@@ -170,8 +172,12 @@ function Chat() {
               onChange={(e) => {
                 setQuestion(e.target.value);
               }}
+              disabled={loading}
             />
-            <Button className="absolute right-6 top-1/2 -translate-y-1/2 cursor-pointer">
+            <Button
+              disabled={loading}
+              className="absolute right-6 top-1/2 -translate-y-1/2 cursor-pointer"
+            >
               <SendHorizontal />
             </Button>
           </div>

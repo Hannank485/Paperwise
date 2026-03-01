@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import authService from "../Service/authService.js";
+import { AppError } from "../app.js";
 
 const authController = {
   async register(req: Request, res: Response) {
@@ -22,8 +23,11 @@ const authController = {
       await authService.register(usernameLower, password);
       return res.status(201).json({ message: "Registration Successful" });
     } catch (err) {
-      if (err instanceof Error)
-        return res.status(400).json({ message: err.message });
+      if (err instanceof AppError) {
+        return res.status(err.status).json({
+          message: err.message,
+        });
+      }
     }
   },
 
@@ -44,15 +48,11 @@ const authController = {
       });
       return res.status(200).json({ message: "Logged In" });
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(400).json({
+      if (err instanceof AppError) {
+        return res.status(err.status).json({
           message: err.message,
         });
       }
-
-      return res.status(500).json({
-        message: "Unknown error",
-      });
     }
   },
   async CheckAuth(req: Request, res: Response) {

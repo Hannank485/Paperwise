@@ -1,12 +1,19 @@
 // FUNCTION TO CHECK CREDIBILITY
-function credibilityCheck(
-  tone: string[],
-  textLength: number,
-  content: string,
-): boolean {
+function credibilityCheck(content: string): boolean {
   const compact = content.toLowerCase().replace(/\s+/g, "");
-
+  // CHECK CREDIBILITY OF THE PDF
+  const tone = [
+    "kinda",
+    "sort of",
+    "super",
+    "really",
+    "stuff",
+    "things",
+    "basically",
+    "literally",
+  ];
   let credibilityScore = 0;
+  const textLength = content.split(/\s+/).length;
 
   // CHECKING PRESENCE OF ABSTRACT
   if (compact.includes("abstract")) {
@@ -19,7 +26,7 @@ function credibilityCheck(
       informalPenalty += 0.5;
     }
   });
-  const totalPenalty = Math.min(informalPenalty, 1);
+  const totalPenalty = Math.min(informalPenalty, 1.5);
   credibilityScore -= totalPenalty;
   //   CHECKING LENGTH
   if (textLength >= 2000) {

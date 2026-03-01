@@ -3,8 +3,7 @@ import fileModel from "../Model/fileModel";
 import sessionModel from "../Model/sessionModel";
 import { embedChunks } from "../utils/embedding";
 import type { ChatCompletionMessageParam } from "openai/resources/chat";
-import { response } from "express";
-
+import { AppError } from "../app";
 const openai = new OpenAI();
 const sessionService = {
   // async create(userId: number) {
@@ -15,10 +14,10 @@ const sessionService = {
   async delete(userId: number, sessionId: number) {
     const session = await sessionModel.getSingleSession(sessionId);
     if (!session) {
-      throw new Error("Session does not exist");
+      throw new AppError("Session does not exist", 404);
     }
     if (session?.userId !== userId) {
-      throw new Error("UNAUTHORISED");
+      throw new AppError("UNAUTHORISED", 403);
     }
     const result = await sessionModel.deleteSession(sessionId, userId);
     return result;
@@ -27,14 +26,14 @@ const sessionService = {
   async messageQuestion(question: string, sessionId: number, userId: number) {
     const session = await sessionModel.getSingleSession(sessionId);
     if (!session) {
-      throw new Error("Session does not exist");
+      throw new AppError("Session does not exist", 404);
     }
     if (session?.userId !== userId) {
-      throw new Error("UNAUTHORISED");
+      throw new AppError("UNAUTHORISED", 403);
     }
     const document = await fileModel.findDocument(sessionId);
     if (!document) {
-      throw new Error("NO DOCUMENT UPLOADED");
+      throw new AppError("NO DOCUMENT EXISTS", 500);
     }
     let context: string = "";
 
@@ -81,20 +80,30 @@ const sessionService = {
       messages: [
         {
           role: "system",
-          content: `You answer questions about a research paper using ONLY the provided context.
+          content: `Answer questions using only the provided research paper context.
 
 Rules:
-- Base answers strictly on the context.
-- Do NOT invent information.
-- If the answer is not explicitly stated, infer cautiously from the context when reasonable. If no relevant information exists, say so clearly.
+- Base answers on the context.
+- Do not invent information.
+- If the answer is not stated, infer cautiously when reasonable.
+- If no relevant information exists, say so clearly.
 - If related information exists, explain what the paper discusses instead.
-- When answering broad questions (such as summaries, reviews, or experimental results), extract and combine relevant information from multiple parts of the context.
+- When referring to context say "the research paper" instead of "context".
+
+Guidelines:
 - Be concise and factual.
-- Organize answers into short sections or bullet points when possible.
+- Use short sections or bullet points.
 - Prefer clear explanations over long paragraphs.
-- Determine whether the paper appears to be an experimental study or a review article based on the context, and answer accordingly.
-- When relevant information exists, present it directly. Avoid starting the answer by saying the information is not available unless nothing relevant is found.
-If the question is unrelated to the paper, say that the context does not contain relevant information.
+
+For broad questions:
+- Combine relevant information from multiple parts of the context.
+
+Paper Type:
+- Identify whether the paper is an experimental study or a review article when possible.
+
+Scope:
+- If the question is unrelated to the topics discussed in context, state that it is not related.
+- If the answer is not in context but is closely related to topics discussed in context, answer using general knowledge.
 `,
         },
 
@@ -113,7 +122,6 @@ If the question is unrelated to the paper, say that the context does not contain
       aiResponse.choices[0].message.content ?? "No response Generated",
       sessionId,
     );
-    console.log(context);
     return response;
   },
   async getAllSessions(userId: number) {
@@ -124,7 +132,7 @@ If the question is unrelated to the paper, say that the context does not contain
   async getSingleSession(sessionId: number, userId: number) {
     const session = await sessionModel.getSingleSession(sessionId);
     if (session?.userId !== userId) {
-      throw new Error("UNAUTHORISED");
+      throw new AppError("UNAUTHORISED", 403);
     }
 
     return session;

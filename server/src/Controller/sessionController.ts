@@ -1,34 +1,11 @@
 import type { Request, Response } from "express";
 import sessionService from "../Service/sessionService";
+import { AppError } from "../app";
 interface AuthRequest extends Request {
   userId?: number;
 }
 
 const sessionController = {
-  // // CREATE SESSION
-  // async create(req: AuthRequest, res: Response) {
-  //   const userId = req.userId;
-  //   if (!userId) {
-  //     return res
-  //       .status(401)
-  //       .json({ message: "Unauthorized to create session" });
-  //   }
-  //   try {
-  //     const session = await sessionService.create(userId);
-  //     return res.status(200).json({ message: session.id });
-  //   } catch (err) {
-  //     if (err instanceof Error) {
-  //       return res.status(400).json({
-  //         message: err.message,
-  //       });
-  //     }
-
-  //     return res.status(500).json({
-  //       message: "Unknown error",
-  //     });
-  //   }
-  // },
-
   // DELETE SESSION
   async delete(req: AuthRequest, res: Response) {
     const userId = req.userId;
@@ -51,14 +28,11 @@ const sessionController = {
       }
       return res.status(200).json({ message: "Delete Successfully" });
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(400).json({
+      if (err instanceof AppError) {
+        return res.status(err.status).json({
           message: err.message,
         });
       }
-      return res.status(500).json({
-        message: "Unknown error",
-      });
     }
   },
   // MESSAGE QUESTIONS
@@ -85,14 +59,11 @@ const sessionController = {
       //  return res.status(201).json({ message: response?.choices[0].message.content });
       return res.status(201).json({ response });
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(400).json({
+      if (err instanceof AppError) {
+        return res.status(err.status).json({
           message: err.message,
         });
       }
-      return res.status(500).json({
-        message: "Unknown error",
-      });
     }
   },
   async getAllSessions(req: AuthRequest, res: Response) {
@@ -104,8 +75,8 @@ const sessionController = {
       const sessions = await sessionService.getAllSessions(userId);
       return res.status(200).json({ sessions });
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(400).json({
+      if (err instanceof AppError) {
+        return res.status(err.status).json({
           message: err.message,
         });
       }
@@ -122,8 +93,8 @@ const sessionController = {
       const session = await sessionService.getSingleSession(sessionId, userId);
       return res.status(200).json(session);
     } catch (err) {
-      if (err instanceof Error) {
-        return res.status(401).json({
+      if (err instanceof AppError) {
+        return res.status(err.status).json({
           message: err.message,
         });
       }

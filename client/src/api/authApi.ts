@@ -2,7 +2,7 @@ import api from "./client";
 
 const authApi = {
   async checkAuth() {
-    await api.post("auth/me");
+    await api.get("auth/me");
   },
   async regsiter(username: string, password: string) {
     await api.post("auth/register", { username, password });

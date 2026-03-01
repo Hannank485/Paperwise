@@ -1,13 +1,12 @@
 import { PDFParse } from "pdf-parse";
 import OpenAI from "openai";
-const openai = new OpenAI();
 import sessionModel from "../Model/sessionModel";
 import fileModel from "../Model/fileModel";
 import prisma from "../prismaClient";
 import getAllEmbedded from "../utils/embedding";
 import createChunk from "../utils/chunk";
 import credibilityCheck from "../utils/credibilityCheck";
-
+import { AppError } from "../app";
 type embeddedChunkType = {
   chunk: string;
   embedding: string;
@@ -27,32 +26,20 @@ const fileService = {
     // Create Session
     const session = await sessionModel.create(userId);
     if (!session) {
-      throw new Error("Session does not exist");
+      throw new AppError("Session does not exist", 404);
     }
     const words = content.split(/\s+/);
-    // CHECK CREDIBILITY OF THE PDF
-    const toneKeywords = [
-      "kinda",
-      "sort of",
-      "super",
-      "really",
-      "stuff",
-      "things",
-      "basically",
-      "literally",
-    ];
 
-    const credible: boolean = credibilityCheck(
-      toneKeywords,
-      words.length,
-      content,
-    );
+    const credible: boolean = credibilityCheck(content);
     let embeddings: embeddedChunkType[] = [];
     if (credible) {
       const chunks = await createChunk(words);
+      if (chunks === false) {
+        return;
+      }
       embeddings = await getAllEmbedded(chunks);
     }
-
+    console.log(credible);
     const document = await prisma.$transaction(
       async (tx) => {
         // STORING DOCUMENT
@@ -63,6 +50,7 @@ const fileService = {
           credible,
           file.originalname,
         );
+
         if (credible) {
           for (const item of embeddings) {
             await fileModel.createEmbedding(
