@@ -79,5 +79,6 @@ describe("Endpoint Check", () => {
 
   afterAll(async () => {
     await prisma.user.delete({ where: { username: "testuser123121" } });
+    await prisma.user.delete({ where: { username: "testUser1231212" } });
   });
 });

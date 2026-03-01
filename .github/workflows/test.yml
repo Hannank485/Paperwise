@@ -1,0 +1,24 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL=${{secrets.DATABASE_URL}}
+      ACCESS_TOKEN=${{secrets.ACCESS_TOKEN}}
+      OPENAI_API_KEY=${{secrets.OPENAI_API_KEY}}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
