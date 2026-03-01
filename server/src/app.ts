@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://paperwise-6a8ynv9hx-hannank485s-projects.vercel.app",
+    origin: "https://https://paperwise-five.vercel.app",
     credentials: true,
   }),
 );
