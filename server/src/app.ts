@@ -16,6 +16,9 @@ export class AppError extends Error {
 
 app.use(cookieParser());
 app.use(express.json());
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 app.use(
   cors({
     origin: "https://https://paperwise-five.vercel.app",
