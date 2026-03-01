@@ -4,10 +4,15 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: read
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server    
     env:
       DATABASE_URL: ${{secrets.DATABASE_URL}}
       ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
@@ -16,9 +21,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 24
+          node-version: 22
+          cache: "npm"
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run tests
         run: npm test
