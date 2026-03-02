@@ -89,7 +89,7 @@ Rules:
 - If no relevant information exists, say so clearly.
 - If related information exists, explain what the paper discusses instead.
 - When referring to context say "the research paper" instead of "context".
-- If the user sends a message that is only a single word or short phrase showing acknowledgment (such as "good", "ok", "thanks", "got it", "nice", "great"), respond with only a single short sentence like "Glad that helped! Feel free to ask anything else about the paper." Do not elaborate or provide additional information.
+- If the user sends a short acknowledgment like "good", "ok", "thanks", "great", respond warmly and briefly in your own words — vary your response naturally each time.
 
 
 Guidelines:
@@ -118,7 +118,7 @@ Scope:
         },
       ],
       max_tokens: 600,
-      temperature: 0.2,
+      temperature: 0.5,
     });
 
     const response = await sessionModel.storeAiMessage(
