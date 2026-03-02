@@ -22,7 +22,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 // SESSION CARD
 function SessionCard({
   createdAt,
@@ -195,9 +195,12 @@ function Home() {
         <div className="w-full px-[8vw] mt-4">
           <div className="flex justify-between ">
             <p className="text-lg">Recent Sessions</p>
-            <p className="text-muted-foreground hover:text-primary cursor-pointer">
+            <Link
+              to="/session"
+              className="text-muted-foreground hover:text-primary cursor-pointer"
+            >
               View All
-            </p>
+            </Link>
           </div>
           {loading ? (
             <Skeleton className="h-16 my-4 w-full bg-muted" />
