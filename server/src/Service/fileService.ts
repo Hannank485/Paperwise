@@ -41,7 +41,7 @@ const fileService = {
     }
     console.log(credible);
     const document = await prisma.$transaction(
-      async (tx) => {
+      async (tx: any) => {
         // STORING DOCUMENT
         const document = await fileModel.createDocument(
           tx,

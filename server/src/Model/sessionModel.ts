@@ -1,5 +1,4 @@
 import prisma from "../prismaClient";
-import { Role } from "@prisma/client";
 const sessionModel = {
   async create(userId: number) {
     const session = await prisma.session.create({
@@ -40,7 +39,7 @@ const sessionModel = {
     await prisma.message.create({
       data: {
         sessionId: sessionId,
-        role: Role.user,
+        role: "user",
         content: question,
       },
     });
@@ -49,7 +48,7 @@ const sessionModel = {
     return await prisma.message.create({
       data: {
         sessionId: sessionId,
-        role: Role.assistant,
+        role: "assistant",
         content: response,
       },
     });

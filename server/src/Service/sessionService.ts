@@ -62,7 +62,7 @@ const sessionService = {
       messageHistory?.messages ?? []
     )
       .slice(-4)
-      .map((m) => ({
+      .map((m: any) => ({
         role: m.role as "user" | "assistant",
         content: m.content,
       }));
