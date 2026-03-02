@@ -77,15 +77,18 @@ function App() {
             <div className="flex-1">
               <Routes>
                 {auth === null && (
-                  <Route
-                    path="/"
-                    element={
-                      <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 scale-200 flex items-center gap-4">
-                        <p className="text-accent">Loading...</p>
-                        <Loader2 className="text-accent animate-spin " />
-                      </div>
-                    }
-                  />
+                  <>
+                    <Route
+                      path="/"
+                      element={
+                        <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 scale-200 flex items-center gap-4">
+                          <p className="text-accent">Loading...</p>
+                          <Loader2 className="text-accent animate-spin " />
+                        </div>
+                      }
+                    />
+                    <Route path="*" element={<Navigate to="/" />} />
+                  </>
                 )}
                 {auth === false && !loading && (
                   <>
